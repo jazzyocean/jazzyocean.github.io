@@ -37,14 +37,13 @@
             }
 
             .entry-date {
-                color: #444;
+                color: #7f7f7f;
                 font-style: italic;
                 font-size: 18px;
                 display: inline;
                 margin: 0;
             }
-            .entry-date::after {
-                content: " ·";
+            .entry-date-dot {
                 font-style: normal;
                 font-weight: bold;
                 color: black;
@@ -102,6 +101,13 @@
                 width: 50ch;
                 height: 10em;
             }
+            
+            .entryInput {
+                border: 0;
+                display: inline-block;
+                width: fit-content;
+                font-family: serif;
+            }
         </style>
     </head>
     <body>
@@ -116,11 +122,17 @@
         <script>
             var entriesobj = document.getElementById("entries");
             
-            const entryTemplate = `<div class="entry"><p class="entry-date">%%date%%</p><p class="entry-title">%%title%%</p><hr><p class="entry-description">%%desc%%</p></div><div class="line-container"><div class="line"></div><span class="line-add-entry" onclick="insert(%%pos%%)">+</span></div>`;
+            const entryTemplate = `<div class="entry"><p id="%%pos%%date" class="entry-date" onkeyup="updateentry(%%pos%%)" contenteditable>%%date%%</p><span class="entry-date-dot">•</span><p id="%%pos%%title" class="entry-title" onkeyup="updateentry(%%pos%%)" contenteditable>%%title%%</p><hr><p id="%%pos%%desc" class="entry-description" onkeyup="updateentry(%%pos%%)" contenteditable>%%desc%%</p></div><div class="line-container"><div class="line"></div><span class="line-add-entry" onclick="insert(%%pos%%)">+</span></div>`;
 
             var entries = [
                 
             ]
+            
+            function updateentry(pos) {
+                entries[pos-1].date = document.getElementById(`${pos}date`).innerHTML;
+                entries[pos-1].title = document.getElementById(`${pos}title`).innerHTML;
+                entries[pos-1].desc = document.getElementById(`${pos}desc`).innerHTML.replace(/<div>/g, "<br>").replace(/<\/div>/g, "");
+            }
 
             function displayJson() {
                 document.getElementById("savearea").value = JSON.stringify(entries);
@@ -133,13 +145,10 @@
             }
 
             function insert(i) {
-                let date = prompt("Date?");
-                let headline = prompt("Headline?");
-                let description = prompt("Description?");
                 let obj = {
-                    "date": date,
-                    "title": headline,
-                    "desc": description.replace(/\\n/g, "\n"),
+                    "date": "Write date here",
+                    "title": "Write title here",
+                    "desc": "Write description here",
                 };
 
                 entries.splice(i, 0, obj);
@@ -156,7 +165,7 @@
                     for (key in entry) {
                         html = html.replace(`%%${key}%%`, entry[key].replace(/\n/g, "<br>"));
                     }
-                    html = html.replace(`%%pos%%`, i);
+                    html = html.replace(/%%pos%%/g, i);
                     entriesobj.innerHTML += html;
                 }
             }
