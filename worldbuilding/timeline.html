@@ -74,6 +74,23 @@
                 /* color: black; */
             }
 
+            .line-remove-entry {
+                display: inline-block;
+                width: 1em;
+                height: 1em;
+                border: 1px solid black;
+                margin-left: 1em;
+                background-color: white;
+                text-align: center;
+                margin-bottom: 0.8em;
+                /* color: white; */
+            }
+            .line-remove-entry:hover {
+                cursor: pointer;
+                font-weight: bold;
+                /* color: black; */
+            }
+
             .entry-title {
                 margin: 0;
                 display: inline;
@@ -122,7 +139,7 @@
         <script>
             var entriesobj = document.getElementById("entries");
             
-            const entryTemplate = `<div class="entry"><p id="%%pos%%date" class="entry-date" onkeyup="updateentry(%%pos%%)" contenteditable>%%date%%</p><span class="entry-date-dot">•</span><p id="%%pos%%title" class="entry-title" onkeyup="updateentry(%%pos%%)" contenteditable>%%title%%</p><hr><p id="%%pos%%desc" class="entry-description" onkeyup="updateentry(%%pos%%)" contenteditable>%%desc%%</p></div><div class="line-container"><div class="line"></div><span class="line-add-entry" onclick="insert(%%pos%%)">+</span></div>`;
+            const entryTemplate = `<div class="entry"><p id="%%pos%%date" class="entry-date" onkeyup="updateentry(%%pos%%)" contenteditable>%%date%%</p><span class="entry-date-dot">•</span><p id="%%pos%%title" class="entry-title" onkeyup="updateentry(%%pos%%)" contenteditable>%%title%%</p><hr><p id="%%pos%%desc" class="entry-description" onkeyup="updateentry(%%pos%%)" contenteditable>%%desc%%</p></div><div class="line-container"><span class="line-remove-entry" onclick="remove(%%pos%%)">-</span><div class="line"></div><span class="line-add-entry" onclick="insert(%%pos%%)">+</span></div>`;
 
             var entries = [
                 
@@ -153,6 +170,18 @@
 
                 entries.splice(i, 0, obj);
 
+                entriesobj.innerHTML = "";
+                display();
+            }
+
+            function remove(i) {
+                if (entries.length == 1) {
+                    entries.splice(i-1, 1);
+                    entriesobj.innerHTML = "<div class=\"line-container\"><div class=\"line\"></div><span class=\"line-add-entry\" onclick=\"insert(1)\">+</span></div>";
+                    return;
+                }
+                entries.splice(i-1, 1);
+                console.log(i);
                 entriesobj.innerHTML = "";
                 display();
             }
