@@ -1,0 +1,5 @@
+:root {
+    --display-edit-buttons: none;
+    --display-save-buttons: none;
+    --display-textarea: none;
+}

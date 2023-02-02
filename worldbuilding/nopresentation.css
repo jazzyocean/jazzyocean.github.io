@@ -1,0 +1,5 @@
+:root {
+    --display-edit-buttons: inline-block;
+    --display-save-buttons: inline-block;
+    --display-textarea: inline-block;
+}

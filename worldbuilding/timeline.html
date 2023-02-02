@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./light.css" id="theme">
+        <link rel="stylesheet" href="./nopresentation.css" id="present">
         <title>Document</title>
         <style>
             html, body {
@@ -11,6 +13,8 @@
                 height: 100%;
                 margin: 0;
                 padding-left: 8px;
+                background-color: var(--primary-col);
+                color: var(--text-col);
             }
 
             .entries {
@@ -23,7 +27,7 @@
             }
             .entries.horizontal .entry {
                 display: inline-block;
-                border: 1px solid black;
+                border: 1px solid var(--accent-col);
                 padding: 16px;
                 height: 40ch;
                 width: 40ch;
@@ -33,7 +37,7 @@
             }
             .entries.horizontal::after {
                 width: 100px;
-                border: 1px solid black;
+                border: 1px solid var(--accent-col);
             }
 
             .entry-date {
@@ -46,24 +50,24 @@
             .entry-date-dot {
                 font-style: normal;
                 font-weight: bold;
-                color: black;
+                color: var(--accent-col);
                 padding-left: 1ch;
                 padding-right: 1ch;
             }
 
             .line {
-                border-top: 1px solid black;
+                border-top: 1px solid var(--accent-col);
                 width: 25ch;
                 display: block;
                 position: static;
             }
             .line-add-entry {
-                display: inline-block;
+                display: var(--display-edit-buttons);
                 width: 1em;
                 height: 1em;
-                border: 1px solid black;
+                border: 1px solid var(--accent-col);
                 margin-left: calc(12.5ch - 0.5em);
-                background-color: white;
+                background-color: var(--primary-col);
                 text-align: center;
                 margin-top: 1em;
                 /* color: white; */
@@ -75,12 +79,12 @@
             }
 
             .line-remove-entry {
-                display: inline-block;
+                display: var(--display-edit-buttons);
                 width: 1em;
                 height: 1em;
-                border: 1px solid black;
+                border: 1px solid var(--accent-col);
                 margin-left: 1em;
-                background-color: white;
+                background-color: var(--primary-col);
                 text-align: center;
                 margin-bottom: 0.8em;
                 /* color: white; */
@@ -96,14 +100,32 @@
                 display: inline;
             }
 
-            .savebutton {
+            .abutton {
                 padding: 16px;
-                border: 1px solid black;
+                border: 1px solid var(--accent-col);
                 border-radius: 2px;
-                color: black;
+                color: var(--accent-col);
                 text-decoration: none;
                 margin-top: 16px;
                 display: inline-block;
+                width: fit-content;
+            }
+            .abutton:hover {
+                cursor: pointer;
+                text-decoration: underline;
+            }
+            .abutton:visited {
+                color: var(--accent-col);
+            }
+
+            .savebutton {
+                padding: 16px;
+                border: 1px solid var(--accent-col);
+                border-radius: 2px;
+                color: var(--accent-col);
+                text-decoration: none;
+                margin-top: 16px;
+                display: var(--display-save-buttons);
                 width: fit-content;
             }
             .savebutton:hover {
@@ -111,12 +133,15 @@
                 text-decoration: underline;
             }
             .savebutton:visited {
-                color: black;
+                color: var(--accent-col);
             }
             #savearea {
+                display: var(--display-textarea);
                 margin-top: 8px;
                 width: 50ch;
                 height: 10em;
+                color: var(--text-col);
+                background-color: var(--primary-col);
             }
             
             .entryInput {
@@ -128,10 +153,64 @@
         </style>
     </head>
     <body>
-        <a class="savebutton" onclick="displayJson()">Save</a>
-        <a class="savebutton" onclick="loadJson()">Load</a>
+        <script>
+            function setCookie(name, value) {
+                document.cookie = `${name}=${value};path=/"`;
+            }
+
+            function getCookie(cname) {
+                let name = cname + "=";
+                let decodedCookie = decodeURIComponent(document.cookie);
+                let ca = decodedCookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+            
+            var theme = getCookie("theme");
+            if (savedTheme == "") {
+                setCookie("theme", "light");
+            }
+
+            if (theme == "light") theme = true; // light
+            else theme = false; // dark
+
+            var themelink = document.getElementById("theme");
+            function toggletheme () {
+                theme = !theme;
+                if (theme) {
+                    themelink.setAttribute("href", "./light.css");
+                } else {
+                    themelink.setAttribute("href", "./dark.css");
+                }
+            }
+            
+            var presentlink = document.getElementById("present");
+            var present = false;
+            function togglepresent () {
+                present = !present;
+                if (present) {
+                    presentlink.setAttribute("href", "./presentation.css");
+                } else {
+                    presentlink.setAttribute("href", "./nopresentation.css");
+                }
+            }
+        </script>
+        
+        <a class="savebutton" onclick="saveEntries()">Save</a>
+        <a class="savebutton" onclick="loadEntries()">Load</a>
         <br>
         <textarea id="savearea"></textarea>
+        <br>
+        <a class="abutton" onclick="toggletheme()">Toggle Theme</a>
+        <a class="abutton" onclick="togglepresent()">Toggle Presentation Mode</a>
         <div class="entries horizontal" id="entries">
             <div class="line-container"><div class="line"></div><span class="line-add-entry" onclick="insert(1)">+</span></div>
         </div>
@@ -146,18 +225,34 @@
             ]
             
             function updateentry(pos) {
-                entries[pos-1].date = document.getElementById(`${pos}date`).innerHTML;
-                entries[pos-1].title = document.getElementById(`${pos}title`).innerHTML;
+                entries[pos-1].date = document.getElementById(`${pos}date`).innerHTML.replace(/<br>/g, "");
+                entries[pos-1].title = document.getElementById(`${pos}title`).innerHTML.replace(/<br>/g, "");
                 entries[pos-1].desc = document.getElementById(`${pos}desc`).innerHTML.replace(/<div>/g, "<br>").replace(/<\/div>/g, "");
             }
 
-            function displayJson() {
+            function saveEntries() {
+                for (let i = 0; i < entries.length; i++) {
+                    entries[i].date = entries[i].date.replace(/<br>/g, "");
+                    entries[i].title = entries[i].title.replace(/<br>/g, "");
+                }
+                setCookie("entries", JSON.stringify(entries));
                 document.getElementById("savearea").value = JSON.stringify(entries);
             }
 
-            function loadJson() {
-                entries = JSON.parse(document.getElementById("savearea").value);
+            function loadEntries() {
+                let savedEntries = getCookie("entries");
+                if (savedEntries == "") {
+                    setCookie("entries", "{}");
+                    entries = JSON.parse(document.getElementById("savearea").value);
+                } else {
+                    entries = JSON.parse(getCookie("entries)"));
+                }
                 entriesobj.innerHTML = "";
+
+                for (let i = 0; i < entries.length; i++) {
+                    entries[i].date = entries[i].date.replace(/<br>/g, "");
+                    entries[i].title = entries[i].title.replace(/<br>/g, "");
+                }
                 display();
             }
 
