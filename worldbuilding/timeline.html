@@ -188,8 +188,10 @@
                 theme = !theme;
                 if (theme) {
                     themelink.setAttribute("href", "./light.css");
+                setCookie("theme", "light");
                 } else {
                     themelink.setAttribute("href", "./dark.css");
+                setCookie("theme", "dark");
                 }
             }
             
