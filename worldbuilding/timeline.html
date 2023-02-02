@@ -175,8 +175,9 @@
             }
             
             var theme = getCookie("theme");
-            if (savedTheme == "") {
+            if (theme == "") {
                 setCookie("theme", "light");
+                theme = "light";
             }
 
             if (theme == "light") theme = true; // light
