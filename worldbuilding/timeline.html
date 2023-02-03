@@ -190,12 +190,15 @@
                 theme = !theme;
                 if (theme) {
                     themelink.setAttribute("href", "./light.css");
-                setCookie("theme", "light");
+                    setCookie("theme", "light");
                 } else {
                     themelink.setAttribute("href", "./dark.css");
-                setCookie("theme", "dark");
+                    setCookie("theme", "dark");
                 }
             }
+
+            theme = !theme;
+            toggletheme();
             
             var presentlink = document.getElementById("present");
             var present = false;
@@ -250,7 +253,7 @@
                     setCookie("entries", "{}");
                     entries = JSON.parse(document.getElementById("savearea").value);
                 } else {
-                    entries = JSON.parse(getCookie("entries)"));
+                    entries = JSON.parse(getCookie("entries"));
                 }
                 entriesobj.innerHTML = "";
 
@@ -298,6 +301,8 @@
                     entriesobj.innerHTML += html;
                 }
             }
+            
+            loadEntries();
             display();
         </script>
     </body>
