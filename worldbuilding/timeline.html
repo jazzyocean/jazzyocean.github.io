@@ -258,6 +258,7 @@
                 entriesobj.innerHTML = "";
 
                 for (let i = 0; i < entries.length; i++) {
+                    if (entries[i] == {}) { continue; }
                     entries[i].date = entries[i].date.replace(/<br>/g, "");
                     entries[i].title = entries[i].title.replace(/<br>/g, "");
                 }
@@ -310,7 +311,6 @@
             }
 
             loadEntries();
-            display();
         </script>
     </body>
 </html>
