@@ -291,8 +291,11 @@
 
             function display() {
                 let i = 0;
-                if (entries == []) {
+                if (entries == [] || entries == [{}]) {
                     entriesobj.innerHTML = `<div class="line-container"><div class="line"></div><span class="line-add-entry" onclick="insert(1)">+</span></div>`;
+                    if (entries == [{}]) {
+                        entries = [];
+                    }
                 } else {
                     for (let entry of entries) {
                         i++
