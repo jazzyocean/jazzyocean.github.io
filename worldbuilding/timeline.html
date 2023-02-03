@@ -291,17 +291,21 @@
 
             function display() {
                 let i = 0;
-                for (let entry of entries) {
-                    i++
-                    var html = entryTemplate;
-                    for (key in entry) {
-                        html = html.replace(`%%${key}%%`, entry[key].replace(/\n/g, "<br>"));
+                if (entries == []) {
+                    entriesobj.innerHTML = `<div class="line-container"><div class="line"></div><span class="line-add-entry" onclick="insert(1)">+</span></div>`;
+                } else {
+                    for (let entry of entries) {
+                        i++
+                        var html = entryTemplate;
+                        for (key in entry) {
+                            html = html.replace(`%%${key}%%`, entry[key].replace(/\n/g, "<br>"));
+                        }
+                        html = html.replace(/%%pos%%/g, i);
+                        entriesobj.innerHTML += html;
                     }
-                    html = html.replace(/%%pos%%/g, i);
-                    entriesobj.innerHTML += html;
                 }
             }
-            
+
             loadEntries();
             display();
         </script>
